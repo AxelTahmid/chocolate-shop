@@ -1,4 +1,5 @@
 const { writeFileSync } = require('fs')
+const { join } = require('path')
 
 // Number of rows to generate
 const rows = 100
@@ -21,6 +22,8 @@ function generateOrderData() {
 
 // Generate CSV file with rows of random order data
 function generateInputCSV(filename) {
+    const outputPath = join(__dirname, '..', 'input', '/')
+
     let csvData = 'cash, price, wrappers needed, type\n'
 
     for (let i = 0; i < rows; i++) {
@@ -28,9 +31,11 @@ function generateInputCSV(filename) {
         csvData += `${orderData}\n`
     }
 
-    writeFileSync(filename, csvData)
+    writeFileSync(`${outputPath}${filename}`, csvData)
 
-    console.log(`Generated ${filename} with 1000 rows of random order data.`)
+    console.info(
+        `Generated ${filename} with ${rows} rows of random order data at ${outputPath}.`
+    )
 }
 
-generateInputCSV('input/orders.csv')
+generateInputCSV('orders.csv')

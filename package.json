@@ -9,9 +9,9 @@
         "node": ">=18.13.0"
     },
     "scripts": {
-        "start" : "node main.js",
+        "start": "node main.js",
         "test": "node test.js",
-        "seed": "node seed.js"
+        "seed": "node utils/seeder.js"
     },
     "author": "Shahadat Hossain <axel.tahmid@gmail.com>",
     "license": "MIT"
