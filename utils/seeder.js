@@ -1,9 +1,6 @@
 const { writeFileSync } = require('fs')
 const { join } = require('path')
 
-// Number of rows to generate
-const rows = 100
-
 // Generate random integer within a range
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
@@ -17,14 +14,14 @@ function generateOrderData() {
     const typeOptions = ['milk', 'dark', 'white', 'sugar free']
     const type = typeOptions[getRandomInt(0, 3)]
 
-    return `${cash}, ${price}, ${wrappersNeeded}, '${type}'`
+    return `${cash}, ${price}, ${wrappersNeeded}, ${type}`
 }
 
 // Generate CSV file with rows of random order data
-function generateInputCSV(filename) {
+function generateInputCSV(filename, rows) {
     const outputPath = join(__dirname, '..', 'input', '/')
 
-    let csvData = 'cash, price, wrappers needed, type\n'
+    let csvData = 'cash, price, wrappersNeeded, type\n'
 
     for (let i = 0; i < rows; i++) {
         const orderData = generateOrderData()
@@ -34,8 +31,8 @@ function generateInputCSV(filename) {
     writeFileSync(`${outputPath}${filename}`, csvData)
 
     console.info(
-        `Generated ${filename} with ${rows} rows of random order data at ${outputPath}.`
+        `[${new Date().toISOString()}] ['INFO'] Generated ${filename} with ${rows} rows of random order data at ${outputPath}.`
     )
 }
 
-generateInputCSV('orders.csv')
+generateInputCSV('orders.csv', 50)
