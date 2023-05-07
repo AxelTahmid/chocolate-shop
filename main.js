@@ -1,5 +1,5 @@
 'use strict'
-const fs = require('fs')
+const { createReadStream, createWriteStream } = require('fs')
 const readline = require('readline')
 const logger = require('./utils/logger')
 
@@ -46,7 +46,7 @@ function parseOrdersFile(filename) {
 
         logger.info('Parse Orders from =>', filename)
 
-        const fileStream = fs.createReadStream(filename, 'utf-8')
+        const fileStream = createReadStream(filename, 'utf-8')
         const rl = readline.createInterface({
             input: fileStream,
             terminal: false,
@@ -100,7 +100,7 @@ function parseOrdersFile(filename) {
 const { Transform } = require('stream')
 
 function writeRedemptionsToFile(redemptions, filename) {
-    const outputStream = fs.createWriteStream(filename)
+    const outputStream = createWriteStream(filename)
 
     const transformStream = new Transform({
         writableObjectMode: true,
@@ -127,14 +127,7 @@ function writeRedemptionsToFile(redemptions, filename) {
     })
 }
 
-// function writeRedemptionsToFile(filename, redemptions) {
-//     const lines = redemptions.map(redemption => {
-//         return `${redemption.type} ${redemption.count}`
-//     })
-//     const fileContents = lines.join('\n')
-//     fs.writeFileSync(filename, fileContents)
-// }
-
+// ! move this to a separate file
 // async function start() {
 //     try {
 //         const orders = await parseOrdersFile('input/orders.csv')
