@@ -44,7 +44,7 @@ function parseOrdersFile(filename) {
     return new Promise((resolve, reject) => {
         const orders = []
 
-        logger.info('filename =>', filename)
+        logger.info('Parse Orders from =>', filename)
 
         const fileStream = fs.createReadStream(filename, 'utf-8')
         const rl = readline.createInterface({
@@ -85,7 +85,7 @@ function parseOrdersFile(filename) {
         })
 
         rl.on('close', () => {
-            logger.info(`Order parsed from => ${filename}`)
+            logger.info(`Order parsed`)
             fileStream.close()
             resolve(orders)
         })

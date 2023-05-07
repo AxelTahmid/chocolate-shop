@@ -1,18 +1,22 @@
 const debug = (message, ...args) =>
-    console.debug(`[${new Date().toISOString()}] ['DEBUG'] ${message}`, ...args)
+    console.debug(`['DEBUG'] [${Date.now()}] ${message}`, ...args)
 
 const info = (message, ...args) =>
-    console.info(`[${new Date().toISOString()}] ['INFO'] ${message}`, ...args)
+    console.info(`['INFO'] [${Date.now()}] ${message}`, ...args)
 
 const warn = (message, ...args) =>
-    console.warn(`[${new Date().toISOString()}] ['WARN'] ${message}`, ...args)
+    console.warn(`['WARN'] [${Date.now()}] ${message}`, ...args)
 
 const error = (message, ...args) =>
-    console.error(`[${new Date().toISOString()}] ['ERROR'] ${message}`, ...args)
+    console.error(`['ERROR'] [${Date.now()}] ${message}`, ...args)
+
+const test = (message, ...args) =>
+    console.error(`['TEST'] [${Date.now()}] ==> ${message}`, ...args)
 
 module.exports = {
     debug,
     info,
     warn,
     error,
+    test,
 }

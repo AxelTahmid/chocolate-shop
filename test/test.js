@@ -10,14 +10,9 @@ const {
 } = require('../main')
 
 function runTests() {
-    // try {
-    // testParseOrdersFile()
+    testParseOrdersFile()
     testProcessOrders()
     // testWriteRedemptionsToFile()
-    // } catch (error) {
-    //     logger.error('error =>', error)
-    //     throw Error(error)
-    // }
 }
 
 function testProcessOrders() {
@@ -50,15 +45,13 @@ function testProcessOrders() {
 
     assert.deepStrictEqual(actualResults, expectedResults)
 
-    logger.info('Process Orders tests passed')
+    logger.test('SUCCESS ==>', 'Process Orders tests passed')
 }
 
 async function testParseOrdersFile() {
-    const filePath = join(__dirname, 'test_input.csv')
+    const filePath = join(__dirname, 'test_orders.csv')
 
-    // const fileName = 'test/test_input.csv'
-    logger.info('test filePath =>', filePath)
-
+    // logger.test('test filePath =>', filePath)
     const expectedOrders = [
         { cash: 26, price: 4, wrappersNeeded: 3, type: 'white' },
         { cash: 2, price: 6, wrappersNeeded: 6, type: 'dark' },
@@ -69,11 +62,11 @@ async function testParseOrdersFile() {
 
     const actualOrders = await parseOrdersFile(filePath)
 
-    // logger.info('test actualOrders =>', JSON.stringify(actualOrders))
+    // logger.test('test actualOrders =>', JSON.stringify(actualOrders))
 
     assert.deepStrictEqual(actualOrders, expectedOrders)
 
-    logger.info('Parse Orders File test passed')
+    logger.test('SUCCESS ==>', 'Parse Orders File test passed')
 }
 
 function testWriteRedemptionsToFile() {
@@ -97,7 +90,7 @@ function testWriteRedemptionsToFile() {
 
     assert.strictEqual(fileContent, expectedContent)
 
-    logger.info('Write Redemptions to File test passed')
+    logger.test('SUCCESS ==>', 'Write Redemptions to File test passed')
 }
 
 runTests()
