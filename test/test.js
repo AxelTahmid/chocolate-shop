@@ -21,39 +21,33 @@ function runTests() {
 }
 
 function testProcessOrders() {
+    // Each key relevant to array of complimentary x1
     const promotionRules = {
-        milk: {
-            promoTypes: ['milk', 'sugar free'],
-        },
-        white: {
-            promoTypes: ['white', 'sugar free'],
-        },
-        'sugar free': {
-            promoTypes: ['sugar free', 'dark'],
-        },
-        dark: { promoTypes: ['dark'] },
+        milk: ['milk', 'sugar free'],
+        white: ['white', 'sugar free'],
+        dark: ['dark'],
+        'sugar free': ['sugar free', 'dark'],
     }
 
     const orders = [
         { cash: 14, price: 2, wrappersNeeded: 6, type: 'milk' },
         { cash: 12, price: 2, wrappersNeeded: 5, type: 'milk' },
-        // { cash: 12, price: 4, wrappersNeeded: 4, type: 'dark' },
-        // { cash: 6, price: 2, wrappersNeeded: 2, type: 'sugar free' },
-        // { cash: 6, price: 2, wrappersNeeded: 2, type: 'white' },
+        { cash: 12, price: 4, wrappersNeeded: 4, type: 'dark' },
+        { cash: 6, price: 2, wrappersNeeded: 2, type: 'sugar free' },
+        { cash: 6, price: 2, wrappersNeeded: 2, type: 'white' },
     ]
 
+    // based on above promotion rule.
     const expectedResults = [
-        { milk: 8, dark: 0, white: 0, 'sugar free': 1 },
-        { milk: 7, dark: 0, white: 0, 'sugar free': 1 },
-        // { milk: 0, dark: 3, white: 0, 'sugar free': 5 },
-        // { milk: 0, dark: 1, white: 5, 'sugar free': 3 },
+        { milk: 8, white: 0, dark: 0, 'sugar free': 1 },
+        { milk: 7, white: 0, dark: 0, 'sugar free': 1 },
+        { milk: 0, white: 0, dark: 3, 'sugar free': 0 },
+        { milk: 0, white: 0, dark: 1, 'sugar free': 4 },
+        { milk: 0, white: 4, dark: 0, 'sugar free': 1 },
     ]
 
     const actualResults = processOrders(orders, promotionRules)
 
-    // for (let i = 0; i < expectedResults.length; i++) {
-    //     assert.deepStrictEqual(actualResults[i], expectedResults[i])
-    // }
     assert.deepStrictEqual(actualResults, expectedResults)
 
     logger.info('Process Orders tests passed')

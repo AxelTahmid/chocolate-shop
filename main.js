@@ -7,12 +7,12 @@ function processOrders(orders, promotionRules) {
     const redemptions = []
 
     // Initialize the count of chocolates based on the promotion rules
-    // And caching it so that counter easily reset for each order
     const chocolatesCache = {}
     Object.keys(promotionRules).forEach(key => (chocolatesCache[key] = 0))
 
     for (const order of orders) {
-        let chocolates = chocolatesCache
+        // cloning to avoid looping for every order
+        const chocolates = { ...chocolatesCache }
 
         const { cash, price, wrappersNeeded, type } = order
 
@@ -22,17 +22,16 @@ function processOrders(orders, promotionRules) {
         // Update the count of chocolates for the purchased type
         chocolates[type] += numChocolates
 
-        // Apply promotions based on the promotion rules
-        // Get promotion based on order type
-        const { promoTypes, incrementBy } = promotionRules[type]
+        // Get complimentary chocolate array based on order type
+        const availableComplimentary = promotionRules[type]
 
         // Calculate the number of chocolates the shopper can get through promotions
         const numPromoChocolates = Math.floor(chocolates[type] / wrappersNeeded)
 
         // Update the count of chocolates for the promotion types
-        for (const promoType of promoTypes) {
-            chocolates[promoType] += numPromoChocolates
-        }
+        availableComplimentary.forEach(free => {
+            chocolates[free] += numPromoChocolates
+        })
 
         // Push a separate redemption for each order
         redemptions.push({ ...chocolates })
@@ -40,93 +39,6 @@ function processOrders(orders, promotionRules) {
 
     return redemptions
 }
-
-/*
-function processOrders(orders, promotionRules) {
-    const redemptions = []
-
-    const chocolates = {}
-    // Initialize the count of chocolates based on the promotion rules
-    for (const rule of promotionRules) {
-        const { type } = rule
-        chocolates[type] = 0
-    }
-
-    for (const order of orders) {
-        const { cash, price, wrappersNeeded, type } = order
-
-        // Calculate the number of chocolates the shopper can buy
-        const numChocolates = Math.floor(cash / price)
-
-        // Update the count of chocolates for the purchased type
-        chocolates[type] += numChocolates
-
-        // Apply promotions based on the promotion rules
-        for (const rule of promotionRules) {
-            const { wrapperType, promoTypes, wrappersNeeded } = rule
-
-            // Calculate the number of chocolates the shopper can get through promotions
-            const numPromoChocolates = Math.floor(
-                chocolates[wrapperType] / wrappersNeeded
-            )
-
-            // Update the count of chocolates for the promotion types
-            for (const promoType of promoTypes) {
-                chocolates[promoType] += numPromoChocolates
-            }
-
-            // Calculate the remaining wrappers after promotions
-            const remainingWrappers = chocolates[wrapperType] % wrappersNeeded
-
-            // Reset the count of chocolates for the wrapper type
-            chocolates[wrapperType] = remainingWrappers
-
-            // Push chocolates to array
-            redemptions.push(chocolates)
-        }
-    }
-
-    return redemptions
-}
-*/
-// function processOrders(orders) {
-//     const redemptions = []
-
-//     for (const order of orders) {
-//         let chocolates = {
-//             milk: 0,
-//             dark: 0,
-//             white: 0,
-//             'sugar free': 0,
-//         }
-//         const { cash, price, wrappersNeeded, type } = order
-//         const chocolatesBought = Math.floor(cash / price)
-
-//         chocolates[type] += chocolatesBought
-
-//         let wrappers = chocolatesBought
-
-//         while (wrappers >= wrappersNeeded) {
-//             if (type === 'milk' || type === 'white') {
-//                 chocolates.milk++
-//                 chocolates['sugar free']++
-//             } else if (type === 'sugar free') {
-//                 chocolates['sugar free']++
-//                 chocolates.dark++
-//             } else if (type === 'dark') {
-//                 chocolates.dark++
-//             }
-
-//             const tradedChocolates = Math.floor(wrappers / wrappersNeeded)
-//             const leftoverWrappers = wrappers % wrappersNeeded
-
-//             wrappers = tradedChocolates + leftoverWrappers
-//         }
-//         redemptions.push(chocolates)
-//     }
-
-//     return redemptions
-// }
 
 function parseOrdersFile(filename) {
     return new Promise((resolve, reject) => {
