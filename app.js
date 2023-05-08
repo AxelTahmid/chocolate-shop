@@ -49,7 +49,6 @@ function processOrdersCSV(
     })
 }
 
-// needs work, not incremential, but exponential on remaining wrappers
 function getOrderTotal(orderArray, promotionRules, chocolates) {
     const cash = parseInt(orderArray[0])
     const price = parseInt(orderArray[1])
@@ -65,13 +64,19 @@ function getOrderTotal(orderArray, promotionRules, chocolates) {
     // Get complimentary chocolate array based on order type
     const availableComplimentary = promotionRules[type]
 
-    // Calculate the number of chocolates the shopper can get through promotions
-    const numPromoChocolates = Math.floor(chocolates[type] / wrappersNeeded)
+    let remainingWrappers = chocolates[type]
+    let numPromoChocolates = Math.floor(remainingWrappers / wrappersNeeded)
 
-    // Update the count of chocolates for the promotion types
-    availableComplimentary.forEach(element => {
-        chocolates[element] += numPromoChocolates
-    })
+    while (numPromoChocolates > 0) {
+        availableComplimentary.forEach(element => {
+            chocolates[element] += numPromoChocolates
+        })
+
+        const wrappersExchanged = numPromoChocolates * wrappersNeeded
+        remainingWrappers =
+            remainingWrappers - wrappersExchanged + numPromoChocolates
+        numPromoChocolates = Math.floor(remainingWrappers / wrappersNeeded)
+    }
 
     return chocolates
 }
