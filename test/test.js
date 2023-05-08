@@ -1,22 +1,32 @@
-const assert = require('node:assert')
-const { readFileSync } = require('fs')
-const { join } = require('path')
-const logger = require('../utils/logger')
+'use strict'
 
-const {
-    processOrders,
-    parseOrdersFile,
-    writeRedemptionsToFile,
-} = require('../main')
+const assert = require('assert')
+const { getOrderTotal, getChocolatesCount, getOutputString } = require('../app')
 
-function runTests() {
-    testParseOrdersFile()
-    testProcessOrders()
-    // testWriteRedemptionsToFile()
-}
+// Test case for getOrderTotal function
+assert.deepStrictEqual(
+    getOrderTotal(
+        [100, 10, 3, 'milk'],
+        { milk: ['milk'], dark: ['dark'] },
+        {
+            milk: 0,
+            dark: 0,
+        }
+    ),
+    { milk: 13, dark: 0 }
+)
 
+// Test case for getChocolatesCount function
+assert.deepStrictEqual(getChocolatesCount({ milk: ['milk'], dark: ['dark'] }), {
+    milk: 0,
+    dark: 0,
+})
+
+// Test case for getOutputString function
+assert.strictEqual(getOutputString({ milk: 10, dark: 5 }), 'milk 10, dark 5\n')
+
+// Unit tests for getOrderTotal function
 function testProcessOrders() {
-    // Each key relevant to array of complimentary x1
     const promotionRules = {
         milk: ['milk', 'sugar free'],
         white: ['white', 'sugar free'],
@@ -24,73 +34,53 @@ function testProcessOrders() {
         'sugar free': ['sugar free', 'dark'],
     }
 
-    const orders = [
-        { cash: 14, price: 2, wrappersNeeded: 6, type: 'milk' },
-        { cash: 12, price: 2, wrappersNeeded: 5, type: 'milk' },
-        { cash: 12, price: 4, wrappersNeeded: 4, type: 'dark' },
-        { cash: 6, price: 2, wrappersNeeded: 2, type: 'sugar free' },
-        { cash: 6, price: 2, wrappersNeeded: 2, type: 'white' },
-    ]
+    // Test case 1
+    const result1 = getOrderTotal([200, 15, 4, 'white'], promotionRules, {
+        milk: 0,
+        white: 0,
+        dark: 0,
+        'sugar free': 0,
+    })
+    assert.deepStrictEqual(result1, {
+        milk: 0,
+        white: 16,
+        dark: 0,
+        'sugar free': 3,
+    })
 
-    // based on above promotion rule.
-    const expectedResults = [
-        { milk: 8, white: 0, dark: 0, 'sugar free': 1 },
-        { milk: 7, white: 0, dark: 0, 'sugar free': 1 },
-        { milk: 0, white: 0, dark: 3, 'sugar free': 0 },
-        { milk: 0, white: 0, dark: 1, 'sugar free': 4 },
-        { milk: 0, white: 4, dark: 0, 'sugar free': 1 },
-    ]
+    // Test case 2
+    const result2 = getOrderTotal([150, 20, 5, 'dark'], promotionRules, {
+        milk: 10,
+        white: 5,
+        dark: 3,
+        'sugar free': 2,
+    })
+    assert.deepStrictEqual(result2, {
+        milk: 10,
+        white: 5,
+        dark: 6,
+        'sugar free': 2,
+    })
 
-    const actualResults = processOrders(orders, promotionRules)
+    // Test case 3
+    const result3 = getOrderTotal([100, 8, 2, 'milk'], promotionRules, {
+        milk: 5,
+        white: 0,
+        dark: 0,
+        'sugar free': 0,
+    })
+    assert.deepStrictEqual(result3, {
+        milk: 17,
+        white: 0,
+        dark: 0,
+        'sugar free': 0,
+    })
 
-    assert.deepStrictEqual(actualResults, expectedResults)
-
-    logger.test('SUCCESS ==>', 'Process Orders tests passed')
+    console.log('Process Orders unit tests passed!')
 }
 
-async function testParseOrdersFile() {
-    const filePath = join(__dirname, 'test_orders.csv')
+// Run the unit tests
+testProcessOrders()
 
-    // logger.test('test filePath =>', filePath)
-    const expectedOrders = [
-        { cash: 26, price: 4, wrappersNeeded: 3, type: 'white' },
-        { cash: 2, price: 6, wrappersNeeded: 6, type: 'dark' },
-        { cash: 25, price: 3, wrappersNeeded: 9, type: 'white' },
-        { cash: 69, price: 8, wrappersNeeded: 6, type: 'milk' },
-        { cash: 40, price: 4, wrappersNeeded: 2, type: 'sugar free' },
-    ]
-
-    const actualOrders = await parseOrdersFile(filePath)
-
-    // logger.test('test actualOrders =>', JSON.stringify(actualOrders))
-
-    assert.deepStrictEqual(actualOrders, expectedOrders)
-
-    logger.test('SUCCESS ==>', 'Parse Orders File test passed')
-}
-
-function testWriteRedemptionsToFile() {
-    const filePath = 'output/redemptions.csv'
-    const redemptions = [
-        { milk: 8, dark: 0, white: 0, 'sugar free': 1 },
-        { milk: 7, dark: 0, white: 0, 'sugar free': 1 },
-        { milk: 0, dark: 3, white: 0, 'sugar free': 0 },
-        { milk: 0, dark: 3, white: 0, 'sugar free': 5 },
-        { milk: 0, dark: 1, white: 5, 'sugar free': 3 },
-    ]
-
-    writeRedemptionsToFile(filePath, redemptions)
-
-    const fileContent = readFileSync(filePath, 'utf8').trim()
-    const expectedContent = `milk 8, dark 0, white 0, sugar free 1
-        milk 7, dark 0, white 0, sugar free 1
-        milk 0, dark 3, white 0, sugar free 0
-        milk 0, dark 3, white 0, sugar free 5
-        milk 0, dark 1, white 5, sugar free 3`
-
-    assert.strictEqual(fileContent, expectedContent)
-
-    logger.test('SUCCESS ==>', 'Write Redemptions to File test passed')
-}
-
-runTests()
+// Print success message
+console.log('All tests passed!')

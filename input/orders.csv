@@ -1,51 +1,51 @@
-cash, price, wrappersNeeded, type
-6, 4, 7, 'milk'
-8, 1, 5, 'milk'
-44, 3, 7, 'milk'
-38, 2, 3, 'sugar free'
-3, 2, 2, 'milk'
-21, 4, 1, 'sugar free'
-20, 2, 10, 'milk'
-43, 10, 2, 'sugar free'
-80, 3, 9, 'white'
-11, 2, 4, 'milk'
-12, 2, 1, 'dark'
-12, 10, 3, 'dark'
-20, 1, 4, 'white'
-22, 2, 8, 'dark'
-38, 10, 1, 'milk'
-54, 10, 4, 'sugar free'
-56, 7, 10, 'white'
-44, 10, 1, 'white'
-31, 3, 7, 'white'
-60, 1, 1, 'sugar free'
-31, 3, 7, 'sugar free'
-78, 5, 1, 'milk'
-95, 5, 1, 'sugar free'
-49, 5, 8, 'white'
-10, 2, 9, 'dark'
-99, 4, 9, 'dark'
-15, 2, 6, 'white'
-14, 7, 5, 'white'
-11, 5, 1, 'white'
-54, 4, 5, 'white'
-5, 3, 7, 'white'
-28, 2, 6, 'white'
-77, 6, 7, 'milk'
-13, 1, 7, 'dark'
-90, 5, 1, 'sugar free'
-27, 2, 7, 'white'
-77, 5, 10, 'sugar free'
-100, 7, 9, 'white'
-9, 6, 5, 'milk'
-12, 5, 3, 'white'
-52, 10, 7, 'sugar free'
-87, 9, 8, 'dark'
-21, 3, 1, 'sugar free'
-59, 6, 9, 'white'
-60, 9, 2, 'dark'
-87, 1, 7, 'dark'
-55, 9, 3, 'white'
-61, 8, 4, 'sugar free'
-24, 1, 5, 'dark'
-84, 5, 4, 'dark'
+cash, price, wrappers needed, type
+83, 4, 3, white
+58, 8, 5, milk
+50, 4, 3, white
+30, 1, 7, sugar free
+95, 10, 10, white
+57, 3, 10, milk
+29, 3, 3, milk
+67, 4, 5, white
+77, 6, 5, white
+57, 3, 10, sugar free
+35, 2, 3, sugar free
+67, 5, 2, white
+82, 1, 7, dark
+38, 8, 8, white
+49, 8, 3, white
+6, 2, 2, sugar free
+95, 7, 1, dark
+79, 6, 3, white
+30, 1, 1, white
+19, 3, 6, white
+79, 3, 2, dark
+71, 5, 6, dark
+9, 9, 8, sugar free
+79, 8, 9, dark
+67, 9, 1, sugar free
+34, 4, 8, milk
+47, 10, 9, sugar free
+59, 6, 7, milk
+11, 8, 6, dark
+6, 2, 4, sugar free
+56, 4, 8, sugar free
+12, 2, 9, sugar free
+64, 6, 4, white
+7, 9, 2, dark
+20, 7, 8, milk
+28, 7, 1, dark
+65, 1, 7, white
+77, 5, 8, sugar free
+94, 3, 3, white
+75, 6, 9, milk
+9, 8, 10, milk
+57, 9, 6, sugar free
+94, 7, 8, milk
+70, 1, 1, dark
+55, 6, 1, white
+54, 1, 6, dark
+2, 5, 6, sugar free
+75, 3, 3, milk
+55, 6, 5, sugar free
+42, 6, 10, dark

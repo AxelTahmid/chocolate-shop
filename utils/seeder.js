@@ -21,7 +21,7 @@ function generateOrderData() {
 function generateInputCSV(filename, rows) {
     const outputPath = join(__dirname, '..', 'input', '/')
 
-    let csvData = 'cash, price, wrappersNeeded, type\n'
+    let csvData = 'cash, price, wrappers needed, type\n'
 
     for (let i = 0; i < rows; i++) {
         const orderData = generateOrderData()
@@ -31,7 +31,7 @@ function generateInputCSV(filename, rows) {
     writeFileSync(`${outputPath}${filename}`, csvData)
 
     console.info(
-        `[${new Date().toISOString()}] ['INFO'] Generated ${filename} with ${rows} rows of random order data at ${outputPath}.`
+        `['INFO'] [${new Date().toISOString()}] Generated ${filename} with ${rows} rows of random order data at ${outputPath}.`
     )
 }
 
