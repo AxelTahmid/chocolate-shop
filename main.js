@@ -7,8 +7,8 @@ async function start() {
     try {
         const promotionRules = {
             milk: ['milk', 'sugar free'],
-            white: ['white', 'sugar free'],
             dark: ['dark'],
+            white: ['white', 'sugar free'],
             'sugar free': ['sugar free', 'dark'],
         }
 

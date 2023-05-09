@@ -17,7 +17,7 @@ function processOrdersCSV(
         let header = null
 
         // Initialize the count of chocolates based on the promotion rules
-        const chocolates = getChocolatesCount()
+        const chocolates = getChocolatesCount(promotionRules)
 
         lineStream.on('line', line => {
             if (!header) {
@@ -35,6 +35,8 @@ function processOrdersCSV(
                 fileOutputStream.write(getOutputString(chocolateCount))
             }
         })
+
+        fileOutputStream.on('error', e => lineStream.error(e))
 
         lineStream.on('close', () => {
             logger.info(`Order parsed`)
@@ -59,38 +61,67 @@ function getOrderTotal(orderArray, promotionRules, chocolates) {
     const numChocolates = Math.floor(cash / price)
 
     // Update the count of chocolates for the purchased type
-    chocolates[type] += numChocolates
+    chocolates[type].count += numChocolates
+    chocolates[type].wrapperCount += numChocolates
 
-    // Get complimentary chocolate array based on order type
-    const availableComplimentary = promotionRules[type]
+    // not using 'type'. initializing current available promo type from wrapperCount
+    let currentComplimentaryType = getAvailablePromo(chocolates, wrappersNeeded)
 
-    let remainingWrappers = chocolates[type]
-    let numPromoChocolates = Math.floor(remainingWrappers / wrappersNeeded)
+    // get chocolates that will increment
+    let availableComplimentary = promotionRules[currentComplimentaryType]
 
-    while (numPromoChocolates > 0) {
+    while (currentComplimentaryType !== null) {
+        // current promo chocolates
+        const numPromoChocolates = Math.floor(
+            chocolates[currentComplimentaryType].wrapperCount / wrappersNeeded
+        )
+
+        // deduct wrappers that will be used to redeem new chocolates
+        chocolates[currentComplimentaryType].wrapperCount -=
+            numPromoChocolates * wrappersNeeded
+
+        // increase wrappers for each redeemed chocolate
         availableComplimentary.forEach(element => {
-            chocolates[element] += numPromoChocolates
+            chocolates[element].count += numPromoChocolates
+            chocolates[element].wrapperCount += numPromoChocolates
         })
 
-        const wrappersExchanged = numPromoChocolates * wrappersNeeded
-        remainingWrappers =
-            remainingWrappers - wrappersExchanged + numPromoChocolates
-        numPromoChocolates = Math.floor(remainingWrappers / wrappersNeeded)
+        if (numPromoChocolates === 0) {
+            currentComplimentaryType = getAvailablePromo(
+                chocolates,
+                wrappersNeeded
+            )
+            availableComplimentary = promotionRules[currentComplimentaryType]
+        }
     }
 
     return chocolates
 }
 
+function getAvailablePromo(chocolates, wrapperNeeded) {
+    for (const type in chocolates) {
+        if (chocolates[type].wrapperCount >= wrapperNeeded) {
+            return type
+        }
+    }
+    return null
+}
+
 // Initialize the count of chocolates based on the promotion rules
 function getChocolatesCount(promotionRules) {
     const chocolates = {}
-    Object.keys(promotionRules).forEach(key => (chocolates[key] = 0))
+    Object.keys(promotionRules).forEach(key => {
+        chocolates[key] = {
+            count: 0,
+            wrapperCount: 0,
+        }
+    })
     return chocolates
 }
 
 function getOutputString(data) {
     const formatOutput = Object.entries(data)
-        .map(([chocolateType, count]) => `${chocolateType} ${count}`)
+        .map(([type, obj]) => `${type} ${obj.count}`)
         .join(', ')
 
     return `${formatOutput}\n`

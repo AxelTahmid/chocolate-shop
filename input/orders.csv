@@ -1,51 +1,6 @@
 cash, price, wrappers needed, type
-83, 4, 3, white
-58, 8, 5, milk
-50, 4, 3, white
-30, 1, 7, sugar free
-95, 10, 10, white
-57, 3, 10, milk
-29, 3, 3, milk
-67, 4, 5, white
-77, 6, 5, white
-57, 3, 10, sugar free
-35, 2, 3, sugar free
-67, 5, 2, white
-82, 1, 7, dark
-38, 8, 8, white
-49, 8, 3, white
-6, 2, 2, sugar free
-95, 7, 1, dark
-79, 6, 3, white
-30, 1, 1, white
-19, 3, 6, white
-79, 3, 2, dark
-71, 5, 6, dark
-9, 9, 8, sugar free
-79, 8, 9, dark
-67, 9, 1, sugar free
-34, 4, 8, milk
-47, 10, 9, sugar free
-59, 6, 7, milk
-11, 8, 6, dark
-6, 2, 4, sugar free
-56, 4, 8, sugar free
-12, 2, 9, sugar free
-64, 6, 4, white
-7, 9, 2, dark
-20, 7, 8, milk
-28, 7, 1, dark
-65, 1, 7, white
-77, 5, 8, sugar free
-94, 3, 3, white
-75, 6, 9, milk
-9, 8, 10, milk
-57, 9, 6, sugar free
-94, 7, 8, milk
-70, 1, 1, dark
-55, 6, 1, white
-54, 1, 6, dark
-2, 5, 6, sugar free
-75, 3, 3, milk
-55, 6, 5, sugar free
-42, 6, 10, dark
+6, 2, 2, 'white'
+14, 2, 6, 'milk'
+12, 2, 5, 'milk'
+12, 4, 4, 'dark'
+6, 2, 2, 'sugar free'

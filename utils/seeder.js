@@ -8,13 +8,13 @@ function getRandomInt(min, max) {
 
 // Generate random order data
 function generateOrderData() {
-    const cash = getRandomInt(1, 100)
+    const cash = getRandomInt(1, 30)
     const price = getRandomInt(1, 10)
-    const wrappersNeeded = getRandomInt(1, 10)
+    const wrappersNeeded = getRandomInt(3, 10)
     const typeOptions = ['milk', 'dark', 'white', 'sugar free']
     const type = typeOptions[getRandomInt(0, 3)]
 
-    return `${cash}, ${price}, ${wrappersNeeded}, ${type}`
+    return `${cash}, ${price}, ${wrappersNeeded}, '${type}'`
 }
 
 // Generate CSV file with rows of random order data
@@ -35,4 +35,4 @@ function generateInputCSV(filename, rows) {
     )
 }
 
-generateInputCSV('orders.csv', 50)
+generateInputCSV('orders.csv', 10)
