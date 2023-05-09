@@ -22,15 +22,21 @@ function processOrdersCSV(
         lineStream.on('line', line => {
             if (!header) {
                 header = line.split(',').map(item => item.trim())
+
+                if (!header) lineStream.error('Empty CSV File')
             } else {
                 const order = line.split(',').map(item => item.trim())
+
                 if (order.length !== header.length) {
                     lineStream.error('Invalid CSV format')
                 }
 
-                const chocolateCount = getOrderTotal(order, promotionRules, {
-                    ...chocolates,
-                })
+                let choco = JSON.parse(JSON.stringify(chocolates))
+                const chocolateCount = getOrderTotal(
+                    order,
+                    promotionRules,
+                    choco
+                )
 
                 fileOutputStream.write(getOutputString(chocolateCount))
             }
@@ -49,6 +55,26 @@ function processOrdersCSV(
             reject(new Error(err))
         })
     })
+}
+
+// Initialize the count of chocolates based on the promotion rules
+function getChocolatesCount(promotionRules) {
+    const chocolates = {}
+    Object.keys(promotionRules).forEach(key => {
+        chocolates[key] = {
+            count: 0,
+            wrapperCount: 0,
+        }
+    })
+    return chocolates
+}
+
+function getOutputString(data) {
+    const formatOutput = Object.entries(data)
+        .map(([type, obj]) => `${type} ${obj.count}`)
+        .join(', ')
+
+    return `${formatOutput}\n`
 }
 
 function getOrderTotal(orderArray, promotionRules, chocolates) {
@@ -105,26 +131,6 @@ function getAvailablePromo(chocolates, wrapperNeeded) {
         }
     }
     return null
-}
-
-// Initialize the count of chocolates based on the promotion rules
-function getChocolatesCount(promotionRules) {
-    const chocolates = {}
-    Object.keys(promotionRules).forEach(key => {
-        chocolates[key] = {
-            count: 0,
-            wrapperCount: 0,
-        }
-    })
-    return chocolates
-}
-
-function getOutputString(data) {
-    const formatOutput = Object.entries(data)
-        .map(([type, obj]) => `${type} ${obj.count}`)
-        .join(', ')
-
-    return `${formatOutput}\n`
 }
 
 module.exports = {

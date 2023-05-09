@@ -32,7 +32,11 @@ function testGetOrderTotal() {
     }
 
     const order1 = [14, 2, 6, 'milk']
-    const chocolateCount1 = getOrderTotal(order1, promotionRules, chocolate)
+    const chocolateCount1 = getOrderTotal(
+        order1,
+        promotionRules,
+        JSON.parse(JSON.stringify(chocolate))
+    )
     assert.deepStrictEqual(chocolateCount1, {
         milk: { count: 8, wrapperCount: 2 },
         dark: { count: 0, wrapperCount: 0 },
@@ -42,26 +46,12 @@ function testGetOrderTotal() {
 
     logger.test('PASS ==>', 'CASE#1 redeemable')
 
-    chocolate = {
-        milk: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        dark: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        white: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        'sugar free': {
-            count: 0,
-            wrapperCount: 0,
-        },
-    }
     const order2 = [12, 2, 5, 'milk']
-    const chocolateCount2 = getOrderTotal(order2, promotionRules, chocolate)
+    const chocolateCount2 = getOrderTotal(
+        order2,
+        promotionRules,
+        JSON.parse(JSON.stringify(chocolate))
+    )
     assert.deepStrictEqual(chocolateCount2, {
         milk: { count: 7, wrapperCount: 2 },
         dark: { count: 0, wrapperCount: 0 },
@@ -71,26 +61,12 @@ function testGetOrderTotal() {
 
     logger.test('PASS ==>', 'CASE#2 one iteration redeem')
 
-    chocolate = {
-        milk: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        dark: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        white: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        'sugar free': {
-            count: 0,
-            wrapperCount: 0,
-        },
-    }
     const order3 = [12, 4, 4, 'dark']
-    const chocolateCount3 = getOrderTotal(order3, promotionRules, chocolate)
+    const chocolateCount3 = getOrderTotal(
+        order3,
+        promotionRules,
+        JSON.parse(JSON.stringify(chocolate))
+    )
 
     assert.deepStrictEqual(chocolateCount3, {
         milk: { count: 0, wrapperCount: 0 },
@@ -101,26 +77,12 @@ function testGetOrderTotal() {
 
     logger.test('PASS ==>', 'CASE#3 not enough wrapper to redeem')
 
-    chocolate = {
-        milk: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        dark: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        white: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        'sugar free': {
-            count: 0,
-            wrapperCount: 0,
-        },
-    }
     const order4 = [6, 2, 2, 'sugar free']
-    const chocolateCount4 = getOrderTotal(order4, promotionRules, chocolate)
+    const chocolateCount4 = getOrderTotal(
+        order4,
+        promotionRules,
+        JSON.parse(JSON.stringify(chocolate))
+    )
 
     assert.deepStrictEqual(chocolateCount4, {
         milk: { count: 0, wrapperCount: 0 },
@@ -131,26 +93,12 @@ function testGetOrderTotal() {
 
     logger.test('PASS ==>', 'CASE#4 cumulative wrapper redeem')
 
-    chocolate = {
-        milk: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        dark: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        white: {
-            count: 0,
-            wrapperCount: 0,
-        },
-        'sugar free': {
-            count: 0,
-            wrapperCount: 0,
-        },
-    }
     const order5 = [6, 2, 2, 'white']
-    const chocolateCount5 = getOrderTotal(order5, promotionRules, chocolate)
+    const chocolateCount5 = getOrderTotal(
+        order5,
+        promotionRules,
+        JSON.parse(JSON.stringify(chocolate))
+    )
 
     assert.deepStrictEqual(chocolateCount5, {
         milk: { count: 0, wrapperCount: 0 },
