@@ -1,23 +1,31 @@
 'use strict'
 
-const logger = require('./utils/logger')
 const filesystem = require('./utils/filesystem')
 
-function processOrdersCSV(
-    input = 'orders.csv',
-    output = 'redemptions.csv',
-    promotionRules
-) {
+function processOrdersCSV(input, output, promotionRules) {
     return new Promise((resolve, reject) => {
-        logger.info('Parse Orders from =>', input)
-
+        // create stream to read csv line by line
         const lineStream = filesystem.readFileByLineStream(input)
+
+        // create stream to write result line by line
         const fileOutputStream = filesystem.writeFileStream(output)
 
         let header = null
 
         // Initialize the count of chocolates based on the promotion rules
+        // lets us have dynamic promotion and chocolate types
         const chocolates = getChocolatesCount(promotionRules)
+
+        lineStream.on('error', err => {
+            fileOutputStream.close()
+            reject(new Error(err))
+        })
+
+        fileOutputStream.on('error', e => {
+            lineStream.close(e)
+            // console.log('error =>', e.message)
+            reject(new Error(e))
+        })
 
         lineStream.on('line', line => {
             if (!header) {
@@ -31,6 +39,7 @@ function processOrdersCSV(
                     lineStream.error('Invalid CSV format')
                 }
 
+                // deep cloning to avoid looping to generate for each line
                 let choco = JSON.parse(JSON.stringify(chocolates))
                 const chocolateCount = getOrderTotal(
                     order,
@@ -42,17 +51,9 @@ function processOrdersCSV(
             }
         })
 
-        fileOutputStream.on('error', e => lineStream.error(e))
-
         lineStream.on('close', () => {
-            logger.info(`Order parsed`)
             fileOutputStream.close()
             resolve()
-        })
-
-        lineStream.on('error', err => {
-            fileOutputStream.close()
-            reject(new Error(err))
         })
     })
 }
@@ -124,6 +125,7 @@ function getOrderTotal(orderArray, promotionRules, chocolates) {
     return chocolates
 }
 
+// returns redeemable type of chocolate if any
 function getAvailablePromo(chocolates, wrapperNeeded) {
     for (const type in chocolates) {
         if (chocolates[type].wrapperCount >= wrapperNeeded) {

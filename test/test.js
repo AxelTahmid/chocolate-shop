@@ -1,32 +1,29 @@
-'use strict'
-
 const assert = require('assert')
-const { getOrderTotal, getChocolatesCount, getOutputString } = require('../app')
+const logger = require('../utils/logger')
 
-// Test case for getOrderTotal function
-assert.deepStrictEqual(
-    getOrderTotal(
-        [100, 10, 3, 'milk'],
-        { milk: ['milk'], dark: ['dark'] },
-        {
-            milk: 0,
-            dark: 0,
-        }
-    ),
-    { milk: 13, dark: 0 }
-)
+const { getChocolatesCount, getOutputString } = require('../app')
 
-// Test case for getChocolatesCount function
-assert.deepStrictEqual(getChocolatesCount({ milk: ['milk'], dark: ['dark'] }), {
-    milk: 0,
-    dark: 0,
-})
+const testGetOrderTotal = require('./orderTests')
+const processOrders = require('./processTests')
 
-// Test case for getOutputString function
-assert.strictEqual(getOutputString({ milk: 10, dark: 5 }), 'milk 10, dark 5\n')
+runTest()
 
-// Unit tests for getOrderTotal function
-function testProcessOrders() {
+async function runTest() {
+    try {
+        testGetChocolatesCount()
+        testGetOutputString()
+        testGetOrderTotal()
+        await processOrders.testCSVEmptyInputFile()
+        await processOrders.testCSVHeadersOnly()
+        await processOrders.testCSVSingleOrder()
+        await processOrders.testCSVMultipleOrders()
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+// Test that the function getChocolatesCount initializes the chocolate count correctly based on the promotion rules.
+function testGetChocolatesCount() {
     const promotionRules = {
         milk: ['milk', 'sugar free'],
         white: ['white', 'sugar free'],
@@ -34,53 +31,58 @@ function testProcessOrders() {
         'sugar free': ['sugar free', 'dark'],
     }
 
-    // Test case 1
-    const result1 = getOrderTotal([200, 15, 4, 'white'], promotionRules, {
-        milk: 0,
-        white: 0,
-        dark: 0,
-        'sugar free': 0,
-    })
-    assert.deepStrictEqual(result1, {
-        milk: 0,
-        white: 16,
-        dark: 0,
-        'sugar free': 3,
-    })
-
-    // Test case 2
-    const result2 = getOrderTotal([150, 20, 5, 'dark'], promotionRules, {
-        milk: 10,
-        white: 5,
-        dark: 3,
-        'sugar free': 2,
-    })
-    assert.deepStrictEqual(result2, {
-        milk: 10,
-        white: 5,
-        dark: 6,
-        'sugar free': 2,
+    const chocolateCount = getChocolatesCount(promotionRules)
+    assert.deepStrictEqual(chocolateCount, {
+        milk: {
+            count: 0,
+            wrapperCount: 0,
+        },
+        dark: {
+            count: 0,
+            wrapperCount: 0,
+        },
+        white: {
+            count: 0,
+            wrapperCount: 0,
+        },
+        'sugar free': {
+            count: 0,
+            wrapperCount: 0,
+        },
     })
 
-    // Test case 3
-    const result3 = getOrderTotal([100, 8, 2, 'milk'], promotionRules, {
-        milk: 5,
-        white: 0,
-        dark: 0,
-        'sugar free': 0,
-    })
-    assert.deepStrictEqual(result3, {
-        milk: 17,
-        white: 0,
-        dark: 0,
-        'sugar free': 0,
-    })
-
-    console.log('Process Orders unit tests passed!')
+    logger.test(
+        'SUCCESS ==>',
+        'function getChocolatesCount initializes the chocolate count correctly based on the promotion rules.'
+    )
 }
 
-// Run the unit tests
-testProcessOrders()
+// Test that the function getOutputString returns the correct output string given a chocolate count object.
+function testGetOutputString() {
+    const chocolateCount = {
+        milk: {
+            count: 12,
+            wrapperCount: 0,
+        },
+        dark: {
+            count: 6,
+            wrapperCount: 0,
+        },
+        white: {
+            count: 3,
+            wrapperCount: 0,
+        },
+        'sugar free': {
+            count: 0,
+            wrapperCount: 0,
+        },
+    }
 
-// Print success message
-console.log('All tests passed!')
+    const outputString = getOutputString(chocolateCount)
+    assert.strictEqual(outputString, 'milk 12, dark 6, white 3, sugar free 0\n')
+
+    logger.test(
+        'SUCCESS ==>',
+        'function getOutputString returns the correct output string given a chocolate count object.'
+    )
+}

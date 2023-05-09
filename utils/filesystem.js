@@ -1,6 +1,12 @@
 const { join } = require('path')
 const { createInterface } = require('readline')
-const { createReadStream, createWriteStream } = require('fs')
+const {
+    createReadStream,
+    createWriteStream,
+    readFileSync,
+    writeFileSync,
+    unlinkSync,
+} = require('fs')
 
 function readFileByLineStream(filename) {
     const inputFilePath = join('input', filename)
@@ -19,7 +25,25 @@ function writeFileStream(filename) {
     return createWriteStream(outputFilePath)
 }
 
+// Utility function to read a test file
+function readTestFile(filePath) {
+    return readFileSync(join('output', filePath), 'utf-8')
+}
+
+// Utility function to create a test file with the given content
+function createTestFile(filePath, content) {
+    writeFileSync(join('input', filePath), content)
+}
+
+// Utility function to delete a test file
+function deleteTestFile(file, folder) {
+    unlinkSync(join(folder, file))
+}
+
 module.exports = {
     readFileByLineStream,
     writeFileStream,
+    readTestFile,
+    createTestFile,
+    deleteTestFile,
 }
